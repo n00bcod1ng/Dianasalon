@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Diana's Salon — Milton</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<script src="image-slot.js"></script>
+<style>
+  :root {
+    --ivory: #F7F0E7;
+    --ivory-deep: #EFE5D7;
+    --coffee: #5C4643;          /* deep mauve-brown — primary text */
+    --coffee-soft: #8A716D;
+    --rose: #C98F8C;            /* rust rose — accent */
+    --rose-deep: #B47B78;       /* legible accent for prices */
+    --rose-soft: #EAD3D0;
+    --line: rgba(92, 70, 67, 0.14);
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans: "Jost", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ivory);
+    color: var(--coffee);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--rose-soft); }
+
+  .eyebrow {
+    font-weight: 400; font-size: 0.72rem; letter-spacing: 0.42em;
+    text-transform: uppercase; color: var(--rose-deep);
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 5rem); }
+  section { scroll-margin-top: 92px; }
+
+  /* ---------- NAV ---------- */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    transition: background 0.5s ease, box-shadow 0.5s ease, padding 0.4s ease;
+    padding: 1.15rem 0;
+  }
+  header.scrolled {
+    background: rgba(247, 240, 231, 0.9);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--line);
+    padding: 0.6rem 0;
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+  .brand { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+  .logo { height: 58px; width: auto; display: block; transition: height 0.4s ease; }
+  header.scrolled .logo { height: 44px; }
+  .nav-mid { display: flex; align-items: center; gap: 2.4rem; }
+  .nav-links { display: flex; align-items: center; gap: 2.4rem; }
+  .nav-links a {
+    text-decoration: none; color: var(--coffee-soft); font-size: 0.8rem;
+    letter-spacing: 0.16em; text-transform: uppercase; font-weight: 400;
+    position: relative; transition: color 0.3s; white-space: nowrap;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -6px; height: 1px; width: 0;
+    background: var(--rose); transition: width 0.35s ease;
+  }
+  .nav-links a:hover { color: var(--coffee); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-right { display: flex; align-items: center; gap: 1.3rem; flex-shrink: 0; }
+
+  .lang-toggle {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: none; border: none; cursor: pointer; font-family: var(--sans);
+    font-size: 0.78rem; letter-spacing: 0.12em; padding: 0.3rem 0;
+  }
+  .lang-toggle .lg { color: var(--coffee-soft); transition: color 0.25s; font-weight: 400; }
+  .lang-toggle .lg.active { color: var(--coffee); font-weight: 500; }
+  .lang-toggle .sep { color: var(--line); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-family: var(--sans); font-size: 0.76rem; letter-spacing: 0.18em;
+    text-transform: uppercase; font-weight: 400; text-decoration: none;
+    padding: 0.8rem 1.6rem; border-radius: 100px; cursor: pointer;
+    transition: all 0.35s ease; border: 1px solid var(--coffee);
+    background: var(--coffee); color: var(--ivory); white-space: nowrap;
+  }
+  .btn:hover { background: transparent; color: var(--coffee); }
+  .btn-ghost { background: transparent; color: var(--coffee); }
+  .btn-ghost:hover { background: var(--coffee); color: var(--ivory); }
+
+  /* ---------- HERO ---------- */
+  .hero { padding-top: clamp(8.5rem, 17vh, 12rem); padding-bottom: clamp(3rem, 8vh, 6rem); }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .hero-copy .eyebrow { display: block; margin-bottom: 1.6rem; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(3.1rem, 7vw, 6rem); line-height: 1.04; letter-spacing: -0.01em;
+    margin-bottom: 1.8rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--rose); }
+  .hero-lead {
+    font-size: clamp(1.05rem, 1.6vw, 1.22rem); max-width: 42ch; color: var(--coffee-soft);
+    margin-bottom: 2.4rem; line-height: 1.75;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .hero-visual { position: relative; }
+  .hero-visual image-slot {
+    width: 100%; height: clamp(420px, 60vh, 640px);
+    box-shadow: 0 40px 80px -40px rgba(92, 70, 67, 0.45);
+  }
+  .hero-tag {
+    position: absolute; bottom: -26px; left: -26px; text-decoration: none;
+    background: var(--ivory); border: 1px solid var(--line);
+    padding: 1rem 1.5rem; border-radius: 6px; color: var(--coffee);
+    box-shadow: 0 20px 40px -24px rgba(92,70,67,0.4); transition: transform 0.3s ease;
+  }
+  .hero-tag:hover { transform: translateY(-3px); }
+  .hero-tag .lbl { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--coffee-soft); margin-bottom: 0.35rem; }
+  .hero-tag .num { font-family: var(--serif); font-size: 1.5rem; font-weight: 500; color: var(--rose-deep); line-height: 1; white-space: nowrap; }
+  .hero-accent { position: absolute; top: -30px; right: -10px; width: 120px; height: 120px; border: 1px solid var(--rose); border-radius: 50%; opacity: 0.5; z-index: -1; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .sec-head { text-align: center; max-width: 680px; margin: 0 auto clamp(3rem, 6vw, 4.5rem); }
+  .sec-head .eyebrow { display: block; margin-bottom: 1.1rem; }
+  .sec-head h2 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.05; letter-spacing: -0.01em;
+  }
+  .sec-head h2 em { font-style: italic; color: var(--rose); }
+  .sec-head p { color: var(--coffee-soft); margin-top: 1.1rem; font-size: 1.05rem; }
+  .divider { width: 46px; height: 1px; background: var(--rose); margin: 1.4rem auto 0; }
+
+  /* ---------- SERVICES ---------- */
+  .services { padding: clamp(4.5rem, 10vh, 8rem) 0; }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 6vw, 5.5rem) clamp(3rem, 8vw, 7rem); }
+  .menu-cat h3 {
+    font-family: var(--serif); font-style: italic; font-weight: 500;
+    font-size: 1.9rem; color: var(--coffee); margin-bottom: 1.4rem;
+    display: flex; align-items: baseline; gap: 0.8rem;
+  }
+  .menu-cat h3::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .price-row { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.6rem 0; }
+  .price-row .name { font-weight: 400; font-size: 1.02rem; color: var(--coffee); }
+  .price-row .name small { display: block; font-size: 0.76rem; color: var(--coffee-soft); font-weight: 300; letter-spacing: 0.01em; max-width: 30ch; }
+  .price-row .leader { flex: 1; min-width: 14px; border-bottom: 1px dotted var(--line); transform: translateY(-4px); }
+  .price-row .price { font-family: var(--serif); font-size: 1.28rem; font-weight: 500; color: var(--rose-deep); white-space: nowrap; }
+  .menu-note { text-align: center; margin-top: clamp(3rem, 6vw, 4.5rem); color: var(--coffee-soft); font-size: 0.95rem; letter-spacing: 0.02em; max-width: 70ch; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+  /* ---------- INSTAGRAM FEED ---------- */
+  .ig { padding: clamp(4.5rem, 10vh, 8rem) 0; background: var(--ivory-deep); }
+  .ig-head { text-align: center; max-width: 680px; margin: 0 auto clamp(2.6rem, 5vw, 3.6rem); }
+  .ig-head .eyebrow { display: block; margin-bottom: 1.1rem; }
+  .ig-handle {
+    display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none;
+    font-family: var(--serif); font-weight: 500; color: var(--coffee);
+    font-size: clamp(2.1rem, 4.4vw, 3.2rem); line-height: 1; letter-spacing: -0.01em;
+    transition: color 0.3s;
+  }
+  .ig-handle:hover { color: var(--rose-deep); }
+  .ig-handle .ig-ic { width: 0.92em; height: 0.92em; color: var(--rose-deep); }
+  .ig-head p { color: var(--coffee-soft); margin-top: 1rem; font-size: 1.05rem; }
+  .ig-follow { margin-top: 1.7rem; gap: 0.55rem; }
+  .ig-follow .ig-ic-sm { width: 16px; height: 16px; }
+  .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(0.7rem, 1.6vw, 1.1rem); max-width: 840px; margin: 0 auto; }
+  .ig-tile { position: relative; aspect-ratio: 4 / 5; }
+  .ig-tile image-slot { width: 100%; height: 100%; }
+  .ig-ov {
+    position: absolute; inset: 0; display: grid; place-items: center; border-radius: 6px;
+    background: rgba(92, 70, 67, 0); opacity: 0; transition: opacity 0.3s ease, background 0.3s ease;
+    pointer-events: none;
+  }
+  .ig-tile:hover .ig-ov { opacity: 1; background: rgba(92, 70, 67, 0.34); }
+  .ig-ov svg { width: 34px; height: 34px; color: var(--ivory); }
+  .ig-foot { text-align: center; margin-top: clamp(2.2rem, 4vw, 3rem); display: flex; flex-wrap: wrap; gap: 0.9rem; justify-content: center; }
+  .social-pill {
+    display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none;
+    padding: 0.7rem 1.4rem; border-radius: 100px; border: 1px solid var(--line);
+    color: var(--coffee); background: var(--ivory); font-size: 0.86rem; letter-spacing: 0.04em;
+    transition: all 0.3s ease;
+  }
+  .social-pill:hover { border-color: var(--rose); color: var(--rose-deep); transform: translateY(-2px); }
+  .social-pill .sp-ic { width: 17px; height: 17px; color: var(--rose-deep); }
+
+  /* ---------- ABOUT ---------- */
+  .about { padding: clamp(4.5rem, 10vh, 8rem) 0; }
+  .about-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center; }
+  .about-visual { position: relative; }
+  .about-visual image-slot { width: 100%; height: clamp(440px, 56vh, 600px); box-shadow: 0 40px 80px -44px rgba(92,70,67,0.5); }
+  .about-visual .frame { position: absolute; inset: 18px -18px -18px 18px; border: 1px solid var(--rose); z-index: -1; }
+  .about-copy .eyebrow { display: block; margin-bottom: 1.3rem; }
+  .about-copy h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 1.06; margin-bottom: 1.6rem; }
+  .about-copy h2 em { font-style: italic; color: var(--rose); }
+  .about-copy p { color: var(--coffee-soft); margin-bottom: 1.2rem; font-size: 1.06rem; max-width: 54ch; }
+  .about-quote { font-family: var(--serif); font-style: italic; font-size: clamp(1.4rem, 2.4vw, 1.85rem); line-height: 1.4; color: var(--coffee) !important; max-width: 48ch; margin-bottom: 1.5rem !important; }
+  .why-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1.4rem; margin: 0.4rem 0 1.6rem; }
+  .why-list li { position: relative; padding-left: 1.7rem; font-size: 0.98rem; color: var(--coffee); }
+  .why-list li::before {
+    content: ""; position: absolute; left: 0; top: 0.5em; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--rose); box-shadow: 0 0 0 3px var(--rose-soft);
+  }
+  .signature { font-family: var(--serif); font-style: italic; font-size: 2.1rem; color: var(--rose-deep); margin-top: 1.4rem; }
+
+  /* ---------- VISIT / FOOTER ---------- */
+  .visit { background: var(--coffee); color: var(--ivory); padding: clamp(4.5rem, 10vh, 7.5rem) 0 clamp(2.5rem, 5vh, 3.5rem); }
+  .visit .eyebrow { color: var(--rose); }
+  .visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2.5rem, 6vw, 5rem); align-items: start; margin-bottom: clamp(3.5rem, 7vw, 5rem); }
+  .visit h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.04; margin: 1.1rem 0 1.6rem; }
+  .visit h2 em { font-style: italic; color: var(--rose); }
+  .visit p.lead { color: rgba(247,240,231,0.72); font-size: 1.08rem; max-width: 42ch; margin-bottom: 2rem; }
+  .visit-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .btn-light { background: var(--ivory); color: var(--coffee); border-color: var(--ivory); }
+  .btn-light:hover { background: transparent; color: var(--ivory); }
+  .btn-outline { background: transparent; color: var(--ivory); border-color: rgba(247,240,231,0.4); }
+  .btn-outline:hover { background: var(--ivory); color: var(--coffee); border-color: var(--ivory); }
+  .info-block { border-top: 1px solid rgba(247,240,231,0.18); padding-top: 1.5rem; }
+  .info-block + .info-block { margin-top: 1.6rem; }
+  .info-block h4 { font-size: 0.7rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.9rem; font-weight: 400; }
+  .info-block p { color: rgba(247,240,231,0.85); font-size: 1rem; line-height: 1.65; }
+  .info-block a { color: var(--ivory); text-decoration: none; border-bottom: 1px solid rgba(247,240,231,0.3); padding-bottom: 1px; transition: border-color 0.3s; }
+  .info-block a:hover { border-color: var(--rose); }
+  .colophon { border-top: 1px solid rgba(247,240,231,0.18); padding-top: 2rem; display: flex; flex-wrap: wrap; gap: 1.4rem; justify-content: space-between; align-items: center; }
+  .colophon .logo-foot { height: 64px; width: auto; filter: brightness(0) invert(1); opacity: 0.92; }
+  .social { display: flex; gap: 1.4rem; }
+  .social a { color: rgba(247,240,231,0.82); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: color 0.3s; }
+  .social a:hover { color: var(--rose); }
+  .colophon small { color: rgba(247,240,231,0.5); font-size: 0.76rem; letter-spacing: 0.04em; }
+
+  /* ---------- REVEAL ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+  }
+  @media (max-width: 900px) {
+    .hero-grid, .about-grid, .visit-grid { grid-template-columns: 1fr; }
+    .hero-visual { order: -1; }
+    .hero-visual image-slot { height: clamp(320px, 46vh, 440px); }
+    .menu-grid { grid-template-columns: 1fr; }
+    .about-visual { max-width: 460px; }
+    .why-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .ig-grid { grid-template-columns: 1fr; max-width: 380px; gap: 1rem; }
+    .hero-tag { left: 0; }
+    .logo { height: 46px; }
+    .nav-right .btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ig-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"></rect>
+    <circle cx="12" cy="12" r="4.3"></circle>
+    <circle cx="17.7" cy="6.35" r="1.15" fill="currentColor" stroke="none"></circle>
+  </symbol>
+  <symbol id="fb-glyph" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07c0 6.02 4.39 11.01 10.13 11.93v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.49 0-1.96.93-1.96 1.88v2.26h3.32l-.53 3.49h-2.79v8.44C19.61 23.08 24 18.09 24 12.07z"></path>
+  </symbol>
+</svg>
+
+<header id="header">
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="Diana's Salon">
+      <img src="images/logo.png" alt="Diana's Salon" class="logo" />
+    </a>
+    <div class="nav-mid">
+      <nav class="nav-links">
+        <a href="#services" data-es="Servicios">Services</a>
+        <a href="#portfolio" data-es="Galería">Portfolio</a>
+        <a href="#about" data-es="Sobre mí">About</a>
+        <a href="#visit" data-es="Visítanos">Visit</a>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">
+        <span class="lg" data-set-lang="en">EN</span>
+        <span class="sep">/</span>
+        <span class="lg" data-set-lang="es">ES</span>
+      </button>
+      <a href="#visit" class="btn btn-ghost" data-es="Reservar">Book Now</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy reveal">
+        <span class="eyebrow" data-es="Colorista Especializada · Milton">Specialized Colorist · Milton</span>
+        <h1 data-es="Tu cabello, <em>mi pasión</em>.">Your hair, <em>my passion</em>.</h1>
+        <p class="hero-lead" data-es="Colorista especializada en Milton — balayage, mechas, color y peinados, siempre con productos profesionales de alta calidad para un cabello sano y hermoso.">A specialized colorist in Milton — balayage, highlights, colour and styling, always with high-quality professional products for hair that stays healthy and beautiful.</p>
+        <div class="hero-actions">
+          <a href="#visit" class="btn" data-es="Reservar una cita">Book an Appointment</a>
+          <a href="#services" class="btn btn-ghost" data-es="Ver servicios">View Services</a>
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <span class="hero-accent"></span>
+        <image-slot id="hero" shape="rounded" radius="6" fit="cover" src="images/hero.webp" placeholder="Drop a hero photo of the salon or your work"></image-slot>
+        <a href="sms:+16476882316" class="hero-tag">
+          <div class="lbl" data-es="Escríbeme para reservar">Text to book</div>
+          <div class="num">647-688-2316</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow" data-es="El Menú">The Menu</span>
+        <h2 data-es="Servicios y <em>Precios</em>">Services &amp; <em>Prices</em></h2>
+        <div class="divider"></div>
+      </div>
+      <div class="menu-grid">
+
+        <div class="menu-cat reveal">
+          <h3 data-es="Cortes y Peinados">Cuts &amp; Styling</h3>
+          <div class="price-row"><span class="name" data-es="Corte de Mujer<small>Lavado, corte y peinado</small>">Women's Haircut<small>Wash, cut &amp; style</small></span><span class="leader"></span><span class="price">$50–115</span></div>
+          <div class="price-row"><span class="name" data-es="Corte de Hombre<small>Lavado, corte y peinado</small>">Men's Haircut<small>Wash, cut &amp; style</small></span><span class="leader"></span><span class="price">from $40</span></div>
+          <div class="price-row"><span class="name" data-es="Secado y Ondas">Blowout &amp; Waves</span><span class="leader"></span><span class="price">$50–115</span></div>
+          <div class="price-row"><span class="name" data-es="Recogido y Peinado Formal">Updo &amp; Formal Styling</span><span class="leader"></span><span class="price">$80–140+</span></div>
+        </div>
+
+        <div class="menu-cat reveal">
+          <h3 data-es="Color">Colour</h3>
+          <div class="price-row"><span class="name" data-es="Retoque de Raíz<small>Lavado, tratamiento y peinado</small>">Root Touch-Up<small>Wash, treatment &amp; style</small></span><span class="leader"></span><span class="price">$90–130+</span></div>
+          <div class="price-row"><span class="name" data-es="Color Completo + Peinado">Full Colour + Style</span><span class="leader"></span><span class="price">$115–180+</span></div>
+          <div class="price-row"><span class="name" data-es="Color + Corte + Peinado">Colour + Cut + Style</span><span class="leader"></span><span class="price">$140–220+</span></div>
+        </div>
+
+        <div class="menu-cat reveal">
+          <h3 data-es="Mechas y Balayage">Highlights &amp; Balayage</h3>
+          <div class="price-row"><span class="name" data-es="Money Piece<small>Enmarque del rostro</small>">Money Piece<small>Face-framing</small></span><span class="leader"></span><span class="price">$180</span></div>
+          <div class="price-row"><span class="name" data-es="Medias Mechas">Half Head Highlights</span><span class="leader"></span><span class="price">$220–260</span></div>
+          <div class="price-row"><span class="name" data-es="Mechas Completas">Full Head Highlights</span><span class="leader"></span><span class="price">$300–380</span></div>
+          <div class="price-row"><span class="name" data-es="Balayage<small>Incluye tóner, corte y peinado</small>">Balayage<small>Incl. toner, cut &amp; style</small></span><span class="leader"></span><span class="price">$250–400</span></div>
+        </div>
+
+        <div class="menu-cat reveal">
+          <h3 data-es="Tratamientos">Treatments</h3>
+          <div class="price-row"><span class="name" data-es="Keratina<small>Alisado y suavidad</small>">Keratin<small>Smoothing treatment</small></span><span class="leader"></span><span class="price">$250–350</span></div>
+          <div class="price-row"><span class="name" data-es="Botox Capilar<small>Reparación y brillo</small>">Hair Botox<small>Repair &amp; shine</small></span><span class="leader"></span><span class="price">$150–260</span></div>
+        </div>
+
+      </div>
+      <p class="menu-note reveal" data-es="Los precios son rangos — el precio final depende del largo, grosor y condición del cabello. Escríbeme para una cotización según lo que buscas.">Prices are ranges &mdash; the final price depends on hair length, thickness &amp; condition. Text me for a quote based on what you're looking for.</p>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="ig" id="portfolio">
+    <div class="wrap">
+      <div class="ig-head reveal">
+        <span class="eyebrow" data-es="Síguenos">Follow Along</span>
+        <a class="ig-handle" href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer">
+          <svg class="ig-ic" aria-hidden="true"><use href="#ig-glyph"></use></svg>
+          <span>@dianas_salon</span>
+        </a>
+        <p data-es="Una muestra del trabajo de Diana. Síguela en Instagram y Facebook para ver lo más reciente.">A glimpse of Diana's work. Follow along on Instagram and Facebook for the latest.</p>
+        <a class="btn ig-follow" href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer" data-es="Seguir en Instagram"><svg class="ig-ic-sm" aria-hidden="true"><use href="#ig-glyph"></use></svg>Follow on Instagram</a>
+      </div>
+      <div class="ig-grid reveal">
+        <div class="ig-tile"><image-slot id="ig1" shape="rounded" radius="6" fit="cover" src="images/work-1.webp" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig2" shape="rounded" radius="6" fit="cover" src="images/work-2.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig3" shape="rounded" radius="6" fit="cover" src="images/work-3.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig4" shape="rounded" radius="6" fit="cover" src="images/work-4.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig5" shape="rounded" radius="6" fit="cover" src="images/work-5.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig6" shape="rounded" radius="6" fit="cover" src="images/work-6.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig7" shape="rounded" radius="6" fit="cover" src="images/work-8.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig8" shape="rounded" radius="6" fit="cover" src="images/work-9.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+        <div class="ig-tile"><image-slot id="ig9" shape="rounded" radius="6" fit="cover" src="images/work-10.jpg" placeholder="Post"></image-slot><span class="ig-ov"><svg aria-hidden="true"><use href="#ig-glyph"></use></svg></span></div>
+      </div>
+      <div class="ig-foot reveal">
+        <a class="social-pill" href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer"><svg class="sp-ic" aria-hidden="true"><use href="#ig-glyph"></use></svg>@dianas_salon</a>
+        <a class="social-pill" href="https://www.facebook.com/people/Dianas-Salon/100095497814576/" target="_blank" rel="noopener noreferrer"><svg class="sp-ic" aria-hidden="true"><use href="#fb-glyph"></use></svg>Diana's Salon</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div class="about-visual reveal">
+        <span class="frame"></span>
+        <image-slot id="portrait" shape="rounded" radius="6" fit="cover" src="images/diana-portrait.jpg" placeholder="Drop a portrait of Diana"></image-slot>
+      </div>
+      <div class="about-copy reveal">
+        <span class="eyebrow" data-es="Conoce a tu Estilista">Meet Your Stylist</span>
+        <h2 data-es="Hola, soy <em>Diana</em>.">Hi, I'm <em>Diana</em>.</h2>
+        <p class="about-quote" data-es="&ldquo;Me encanta ayudar a cada mujer a sentirse más bella, segura y empoderada.&rdquo;">&ldquo;I love helping every woman feel more beautiful, confident and empowered.&rdquo;</p>
+        <p data-es="Soy colorista especializada en Milton. Me encanta ayudarte a lograr tus metas de cabello — balayage, mechas, cambios de color, retoques de raíz, keratina y botox capilar — siempre con productos profesionales de alta calidad.">I'm a specialized colorist based in Milton, helping you reach your hair goals — balayage, highlights, colour changes, root touch-ups, keratin and hair botox — always with high-quality professional products.</p>
+        <ul class="why-list">
+          <li data-es="Atención personalizada">Personalized approach</li>
+          <li data-es="Productos de alta calidad">High-quality products</li>
+          <li data-es="Formación continua">Continuous training</li>
+          <li data-es="Resultados que perduran">Results that last</li>
+        </ul>
+        <p data-es="Siempre recibo nuevos clientes — hablemos de tus metas de cabello y encontremos juntas el servicio ideal para ti.">New clients are always welcome — let's talk about your hair goals and find the right service for you.</p>
+        <div class="signature">Diana</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="visit" id="visit">
+    <div class="wrap">
+      <div class="visit-grid">
+        <div class="reveal">
+          <span class="eyebrow" data-es="Visítanos">Come Visit</span>
+          <h2 data-es="Reservemos tu <em>cita</em>.">Let's get you <em>booked</em>.</h2>
+          <p class="lead" data-es="Escríbeme con los días y horarios que mejor te funcionen y te agendo. Siempre recibo nuevos clientes.">Text me with the days and times that work best for you and I'll schedule you in. New clients always welcome.</p>
+          <div class="visit-actions">
+            <a href="sms:+16476882316" class="btn btn-light" data-es="Escribir al 647-688-2316">Text 647-688-2316</a>
+            <a href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer" class="btn btn-outline" data-es="Instagram">Message on Instagram</a>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="info-block">
+            <h4 data-es="Por Cita">By Appointment</h4>
+            <p data-es="Reservas por mensaje de texto o DM. Comparte tu disponibilidad y encontraré un horario para ti.">Booking by text or DM. Share your availability and I'll find a time that works for you.</p>
+          </div>
+          <div class="info-block">
+            <h4 data-es="Ubicación">Find Us</h4>
+            <p data-es="Milton, ON — cerca de Tremaine y Saint Laurent">Milton, ON — near Tremaine &amp; Saint Laurent</p>
+          </div>
+          <div class="info-block">
+            <h4 data-es="Contacto">Get in Touch</h4>
+            <p><a href="sms:+16476882316">647-688-2316</a><br /><a href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer">@dianas_salon</a></p>
+          </div>
+        </div>
+      </div>
+      <div class="colophon">
+        <img src="images/logo.png" alt="Diana's Salon" class="logo-foot" />
+        <div class="social">
+          <a href="https://www.instagram.com/dianas_salon/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.facebook.com/people/Dianas-Salon/100095497814576/" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="sms:+16476882316" data-es="Mensaje">Text</a>
+        </div>
+        <small data-es="© 2026 Diana's Salon · Milton, ON">&copy; 2026 Diana's Salon · Milton, ON</small>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Sticky nav state
+  const header = document.getElementById('header');
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 24);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // ---------- Bilingual EN / ES ----------
+  const i18nEls = Array.from(document.querySelectorAll('[data-es]'));
+  i18nEls.forEach((el) => { el.dataset.en = el.innerHTML; });
+  const langButtons = document.querySelectorAll('.lang-toggle .lg');
+
+  function setLang(lang) {
+    i18nEls.forEach((el) => { el.innerHTML = lang === 'es' ? el.dataset.es : el.dataset.en; });
+    document.documentElement.lang = lang;
+    langButtons.forEach((b) => b.classList.toggle('active', b.dataset.setLang === lang));
+    try { localStorage.setItem('ds-lang', lang); } catch (e) {}
+  }
+
+  document.getElementById('langToggle').addEventListener('click', (e) => {
+    const target = e.target.closest('[data-set-lang]');
+    let next;
+    if (target) { next = target.dataset.setLang; }
+    else { next = document.documentElement.lang === 'es' ? 'en' : 'es'; }
+    setLang(next);
+  });
+
+  let saved = 'en';
+  try { saved = localStorage.getItem('ds-lang') || 'en'; } catch (e) {}
+  setLang(saved);
+
+  // ---------- Reveal on scroll (robust) ----------
+  const reveals = Array.from(document.querySelectorAll('.reveal'));
+  const show = (el) => el.classList.add('in');
+  const revealInView = () => {
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    reveals.forEach((el) => {
+      if (el.classList.contains('in')) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < vh * 0.92 && r.bottom > 0) show(el);
+    });
+  };
+  revealInView();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach((el) => { if (!el.classList.contains('in')) io.observe(el); });
+  window.addEventListener('load', revealInView);
+  setTimeout(() => reveals.forEach(show), 2500);
+</script>
+</body>
+</html>
